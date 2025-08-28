@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   define: {
-    'process.env': process.env, // Polyfill process.env
+    'process.env': {
+      VITE_OPENAI_API_KEY: process.env.VITE_OPENAI_API_KEY, // Only expose this variable
+    },
   }
 })
