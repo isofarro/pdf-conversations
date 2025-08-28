@@ -1,0 +1,55 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+/* PDF conversation styles */
+
+.chat-form {
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-form textarea {
+  width: 80%;
+  padding: 0.5em;
+  font-size: 1em;
+}
+
+.chat-messages {
+  text-align: left;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1em;
+  border: 1px solid #666;
+  padding: 1em;
+  min-width: 80vw;
+}
+
+.chat-message {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  width: 80%;
+  padding: 1em;
+  margin: 2em 0;
+}
+
+.chat-message.role-user {
+  background-color: #333;
+  align-self: flex-end;
+  margin-left: auto;
+  border-bottom-left-radius: 0;
+}
+
+.chat-message.role-system {
+  background-color: #666;
+  align-self: flex-start;
+  margin-right: auto;
+  border-bottom-right-radius: 0;
+}
