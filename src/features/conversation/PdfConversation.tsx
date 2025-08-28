@@ -23,11 +23,9 @@ export const PdfConversation = () => {
     
     return (
         <>
-            <div className="card">
-                <ChatMessages messages={messages} />
-                <ChatInput onSend={handleMessage} />
-                <SelectFile onSelect={handleFileSelect} />
-            </div>
+            <ChatMessages messages={messages} filename={clientRef.current.currentFile?.filename} />
+            <SelectFile onSelect={handleFileSelect} />
+            <ChatInput onSend={handleMessage} />
         </>
     );
 }

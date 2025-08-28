@@ -3,6 +3,7 @@ import type { Message } from "../../api/openai/types";
 
 type ChatMessagesProps = {
     messages: Message[];
+    filename?: string;
 }
 
 const ChatMessage = ({message}: {message: Message}) => {
@@ -10,16 +11,19 @@ const ChatMessage = ({message}: {message: Message}) => {
     if (!isStringContent){ return null; } // Only render string content for now
     return (
         <div className={`chat-message role-${message.role}`}>
-            <strong>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'AI' : 'System'}:</strong>
+            <strong>{message.role === 'user' ? 'You: ' : message.role === 'assistant' ? '' : 'System: '}</strong>
             <Markdown>{message.content as string}</Markdown>
         </div>
     )
 };
 
-export const ChatMessages = ({messages}: ChatMessagesProps) => {
+export const ChatMessages = ({messages, filename}: ChatMessagesProps) => {
     return (
-        <div className="chat-messages">
-            {messages.map((msg, index) => (<ChatMessage key={index} message={msg} />))}
-        </div>
+        <>
+            {!!filename && <div className="chat-filename">{`Chatting about file: ${filename}`}</div>}
+            <div className="chat-messages">
+                {messages.map((msg, index) => (<ChatMessage key={index} message={msg} />))}
+            </div>
+        </>
     );
 }
