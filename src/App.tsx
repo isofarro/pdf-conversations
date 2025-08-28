@@ -1,5 +1,5 @@
-import './App.css'
-import { PdfConversation } from './features/conversation/PdfConversation'
+import './App.css';
+import { PdfConversation } from './features/conversation/PdfConversation';
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <PdfConversation />
       </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,5 +8,5 @@ export default defineConfig({
     'process.env': {
       VITE_OPENAI_API_KEY: process.env.VITE_OPENAI_API_KEY, // Only expose this variable
     },
-  }
-})
+  },
+});

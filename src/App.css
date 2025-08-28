@@ -1,4 +1,3 @@
-
 /* page layout */
 #root {
   display: flex;
@@ -84,16 +83,14 @@ main {
   border-bottom-right-radius: 0;
 }
 
-
 /* Upload form styles */
 .upload-form {
   display: flex;
   column-gap: 1em;
   align-items: center;
-
 }
 
-.upload-form input[type="file"] {
+.upload-form input[type='file'] {
   flex-grow: 1;
   max-width: 50%;
 }
