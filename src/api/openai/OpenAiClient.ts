@@ -22,7 +22,7 @@ export class OpenAiClient {
         });
     }
 
-    addFile(file: string) {
+    addFile(file: File) {
         console.log("File added to OpenAiClient:", file);
     }
 

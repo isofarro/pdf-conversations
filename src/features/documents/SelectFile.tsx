@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type SelectFileProps = {
-    onSelect: (file: string) => void;
+    onSelect: (file: File) => void;
 }
 
 export const SelectFile = ({ onSelect }: SelectFileProps) => {
@@ -18,7 +18,7 @@ export const SelectFile = ({ onSelect }: SelectFileProps) => {
             alert("No file selected");
             return;
         }
-        onSelect(file.name);
+        onSelect(file);
         e.preventDefault();
     };
 

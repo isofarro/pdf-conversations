@@ -9,7 +9,7 @@ export const PdfConversation = () => {
     const clientRef = useRef(new OpenAiClient())
     const [messages, setMessages] = useState(clientRef.current.history);
 
-    const handleFileSelect = (file: string) => {
+    const handleFileSelect = (file: File) => {
         clientRef.current.addFile(file);
     }
 
