@@ -4,6 +4,8 @@ type SelectFileProps = {
     onSelect: (file: File) => void;
 }
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export const SelectFile = ({ onSelect }: SelectFileProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [isUpdated, setIsUpdated] = useState(false);
@@ -16,18 +18,24 @@ export const SelectFile = ({ onSelect }: SelectFileProps) => {
     };
 
     const handleSelect = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         if (!file) {
             alert("No file selected");
             return;
         }
+
+        if (file.size > MAX_FILE_SIZE) {
+            alert("File size exceeds the 10MB limit.");
+            return;
+        }
+
         onSelect(file);
         setIsUpdated(false);
-        e.preventDefault();
     };
 
     return (
-        <form action="http://localhost:8080/upload" method="post" encType="multipart/form-data">
-            <input name="myFile" type="file" onChange={handleChange} />
+        <form action="http://localhost:8080/upload" method="post" encType="multipart/form-data" className="upload-form">
+            <input name="myFile" type="file" onChange={handleChange}  />
             <button type="submit" onClick={handleSelect} disabled={!isUpdated}>
                 Upload
             </button>
