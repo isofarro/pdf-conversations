@@ -1,12 +1,35 @@
+
+/* page layout */
 #root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /* max-width: 1280px;
+  margin: 0 auto;
+  text-align: center; */
+}
+
+#root > header {
+  padding: 1em;
+  border-bottom: 1px solid #666;
+}
+
+main {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
+
+main
 
 .card {
   padding: 2em;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* PDF conversation styles */
@@ -23,8 +46,8 @@
 }
 
 .chat-messages {
+  flex: 1;
   text-align: left;
-  max-height: 400px;
   overflow-y: auto;
   margin-bottom: 1em;
   border: 1px solid #666;
