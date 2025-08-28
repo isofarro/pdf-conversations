@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { Message } from "./types";
+import type { Message, OpenAiMessage } from "./types";
 
 const LLM_DEFAULTS = {
     model: "gpt-4o-mini",
@@ -29,7 +29,8 @@ export class OpenAiClient {
     private async getResponse() {
         const response = await this.client.responses.create({
             ...LLM_DEFAULTS,
-            input: this.history,
+            input: this.history
+                .filter(m => m.role !== 'local') as OpenAiMessage[]
         });
         const reply = response.output_text;
         this.history.push({ role: 'assistant', content: reply });
