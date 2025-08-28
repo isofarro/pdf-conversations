@@ -23,7 +23,7 @@ export const ChatInput = ({onSend}: ChatInputProps) => {
                 placeholder="Type your message..."
                 rows={4}
             />
-            <button type="submit">Send</button>
+            <button type="submit" disabled={input === ""}>Send</button>
         </form>
     );
 }
