@@ -1,8 +1,8 @@
 import OpenAI from "openai";
-import type { Message, OpenAiMessage } from "./types";
+import type { FileUploadContent, Message, OpenAiMessage, UploadedFile } from "./types";
 
 const LLM_DEFAULTS = {
-    model: "gpt-4o-mini",
+    model: "gpt-4o-mini", // can handle PDF uploads
     // model: "gpt-5",
     // reasoning: { effort: "low" },
     // instructions: "Talk like a pirate.",
@@ -13,6 +13,7 @@ export class OpenAiClient {
     history: Message[] = [
         { role: 'system', content: 'You are a helpful assistant.' }
     ];
+    currentFile: UploadedFile | null = null;
 
     constructor() {
         // Initialization code here -- import.meta.env.VITE_OPENAI_API_KEY
@@ -22,8 +23,21 @@ export class OpenAiClient {
         });
     }
 
-    addFile(file: File) {
-        console.log("File added to OpenAiClient:", file);
+    async addFile(file: File) {
+        // Simulate file processing and add a message to history
+        const uploadedFile = await this.client.files.create({
+            file: file,
+            purpose: "user_data",
+        });
+        this.history.push({ role: 'local', content: `File uploaded: ${file.name}` });
+        console.log("File added to OpenAiClient:", file, uploadedFile);
+        const fileContent: FileUploadContent = {
+            type: 'input_file', 
+            file_id: uploadedFile.id
+        };
+        this.currentFile = uploadedFile
+        this.history.push({ role: 'user', content: [fileContent] });
+        return true;
     }
 
     private async getResponse() {

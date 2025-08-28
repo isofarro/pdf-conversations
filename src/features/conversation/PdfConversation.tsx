@@ -9,8 +9,9 @@ export const PdfConversation = () => {
     const clientRef = useRef(new OpenAiClient())
     const [messages, setMessages] = useState(clientRef.current.history);
 
-    const handleFileSelect = (file: File) => {
-        clientRef.current.addFile(file);
+    const handleFileSelect = async (file: File) => {
+        await clientRef.current.addFile(file);
+        setMessages([...clientRef.current.history]);
     }
 
     const handleMessage = async (message: string) => {

@@ -5,12 +5,16 @@ type ChatMessagesProps = {
     messages: Message[];
 }
 
-const ChatMessage = ({message}: {message: Message}) => (
-    <div className={`chat-message role-${message.role}`}>
-        <strong>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'AI' : 'System'}:</strong>
-        <Markdown>{message.content}</Markdown>
-    </div>
-);
+const ChatMessage = ({message}: {message: Message}) => {
+    const isStringContent = typeof message.content === 'string';
+    if (!isStringContent){ return null; } // Only render string content for now
+    return (
+        <div className={`chat-message role-${message.role}`}>
+            <strong>{message.role === 'user' ? 'You' : message.role === 'assistant' ? 'AI' : 'System'}:</strong>
+            <Markdown>{message.content as string}</Markdown>
+        </div>
+    )
+};
 
 export const ChatMessages = ({messages}: ChatMessagesProps) => {
     return (
