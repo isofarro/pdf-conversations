@@ -16,11 +16,12 @@ const LLM_DEFAULTS = {
 
 export class OpenAiClient {
   client: OpenAI;
+  files: UploadedFile[] = [];
   history: Message[] = [
     { role: 'system', content: 'You are a helpful assistant.' },
   ];
   currentFile: UploadedFile | null = null;
-  lastUploadedFile: FileUploadContent | null = null;
+  lastSelectedFile: FileUploadContent | null = null;
   lastError: string | null = null;
 
   constructor() {
@@ -29,6 +30,18 @@ export class OpenAiClient {
       apiKey: import.meta.env.VITE_OPENAI_API_KEY,
       dangerouslyAllowBrowser: true, // Allow usage in browser (not recommended for production)
     });
+  }
+
+  async loadFiles() {
+    try {
+      const files = await this.client.files.list();
+      if (files.data.length > 0) {
+        this.files = files.data;
+        console.log('Loaded existing file:', this.files);
+      }
+    } catch (error) {
+      console.error('Error loading files:', error);
+    }
   }
 
   async addFile(file: File) {
@@ -42,7 +55,7 @@ export class OpenAiClient {
       content: `File uploaded: ${file.name}`,
     });
     console.log('File added to OpenAiClient:', file, uploadedFile);
-    this.lastUploadedFile = {
+    this.lastSelectedFile = {
       type: 'input_file',
       file_id: uploadedFile.id,
     };
@@ -50,14 +63,26 @@ export class OpenAiClient {
     return true;
   }
 
+  async selectFileById(fileId: string): Promise<UploadedFile | null> {
+    const file = this.files.find((f) => f.id === fileId) || null;
+    if (file) {
+      this.lastSelectedFile = {
+        type: 'input_file',
+        file_id: fileId,
+      };
+      this.currentFile = file;
+    }
+    return file;
+  }
+
   addMessage(message: string) {
-    if (this.lastUploadedFile) {
+    if (this.lastSelectedFile) {
       // Attach file reference to the next user message
       this.history.push({
         role: 'user',
-        content: [this.lastUploadedFile, { type: 'input_text', text: message }],
+        content: [this.lastSelectedFile, { type: 'input_text', text: message }],
       });
-      this.lastUploadedFile = null; // Reset after using
+      this.lastSelectedFile = null; // Reset after using
     } else {
       this.history.push({ role: 'user', content: message });
     }
