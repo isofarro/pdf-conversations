@@ -3,7 +3,7 @@ export type OpenAiMessage = {
   content: string;
 };
 
-export type FileUploadContent =
+export type FileReferenceContent =
   | {
       type: 'input_file';
       file_id: string;
@@ -15,7 +15,7 @@ export type FileUploadContent =
 
 export type Message = {
   role: 'user' | 'assistant' | 'system' | 'local';
-  content: string | FileUploadContent[];
+  content: string | FileReferenceContent[];
 };
 
 export type UploadedFile = {

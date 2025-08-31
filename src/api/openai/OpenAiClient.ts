@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import type {
-  FileUploadContent,
+  FileReferenceContent,
   Message,
   OpenAiMessage,
   UploadedFile,
@@ -21,7 +21,7 @@ export class OpenAiClient {
     { role: 'system', content: 'You are a helpful assistant.' },
   ];
   currentFile: UploadedFile | null = null;
-  lastSelectedFile: FileUploadContent | null = null;
+  lastSelectedFile: FileReferenceContent | null = null;
   lastError: string | null = null;
 
   constructor() {

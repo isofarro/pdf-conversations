@@ -1,5 +1,5 @@
 import Markdown from 'markdown-to-jsx';
-import type { Message } from '../../../api/openai/types';
+import type { FileReferenceContent, Message } from '../../../api/openai/types';
 import { ThreeDot } from 'react-loading-indicators';
 
 type ChatMessagesProps = {
@@ -7,11 +7,31 @@ type ChatMessagesProps = {
   isBusy: boolean;
 };
 
+const formatContentArrayAsString = (content: FileReferenceContent[]): string => {
+  return content
+    .map((item) => {
+      if (item.type === 'input_file') {
+        // return `[File: ${item.file_id}]`;
+        return '';
+      } else if (item.type === 'input_text') {
+        return item.text;
+      }
+      return '';
+    })
+    .join('\n');
+}
+
+const formatMessageContentAsString = (content: string | FileReferenceContent[]): string => {
+  if (typeof content === 'string') {
+    return content as string;
+  } else {
+    return formatContentArrayAsString(content);
+  }
+}
+
 const ChatMessage = ({ message }: { message: Message }) => {
-  const isStringContent = typeof message.content === 'string';
-  if (!isStringContent) {
-    return null;
-  } // Only render string content for now
+  const text = formatMessageContentAsString(message.content);
+
   return (
     <div className={`chat-message role-${message.role}`}>
       <strong>
@@ -21,7 +41,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
             ? ''
             : 'System: '}
       </strong>
-      <Markdown>{message.content as string}</Markdown>
+      <Markdown>{text}</Markdown>
     </div>
   );
 };
