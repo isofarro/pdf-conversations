@@ -88,6 +88,11 @@ label.sr-only {
   border-bottom-right-radius: 0;
 }
 
+.chat-error {
+  color: red;
+  margin-top: 1em;
+}
+
 /* Upload form styles */
 .upload-form {
   display: flex;
