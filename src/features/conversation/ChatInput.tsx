@@ -17,6 +17,9 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="chat-form">
+      <label htmlFor="chatInput" className="sr-only">
+        Your Message:
+      </label>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}

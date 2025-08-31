@@ -32,6 +32,11 @@ main {
 
 /* PDF conversation styles */
 
+label.sr-only {
+  position: absolute;
+  left: -10000px;
+}
+
 .chat-filename {
   margin: 1em 0;
   text-align: left;
@@ -54,7 +59,7 @@ main {
   flex: 1;
   text-align: left;
   overflow-y: auto;
-  margin-bottom: 1em;
+  margin: 1em 0;
   border: 1px solid #666;
   padding: 1em;
   min-width: 80vw;

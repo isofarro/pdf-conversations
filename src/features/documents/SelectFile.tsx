@@ -40,6 +40,9 @@ export const SelectFile = ({ onSelect }: SelectFileProps) => {
       encType="multipart/form-data"
       className="upload-form"
     >
+      <label htmlFor="fileInput" className="sr-only">
+        Select a file to upload (max 10MB):{' '}
+      </label>
       <input name="myFile" type="file" onChange={handleChange} />
       <button type="submit" onClick={handleSelect} disabled={!isUpdated}>
         Upload
