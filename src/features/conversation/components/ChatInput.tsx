@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
 type ChatInputProps = {
+  isBusy: boolean;
   onSend: (message: string) => void;
 };
 
-export const ChatInput = ({ onSend }: ChatInputProps) => {
+export const ChatInput = ({ isBusy, onSend }: ChatInputProps) => {
   const [input, setInput] = useState('');
+  const isDisabled = isBusy || input.trim() === '';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         placeholder="Type your message..."
         rows={4}
       />
-      <button type="submit" disabled={input === ''}>
+      <button type="submit" disabled={isDisabled}>
         Send
       </button>
     </form>

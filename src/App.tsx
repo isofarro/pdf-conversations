@@ -1,5 +1,5 @@
 import './App.css';
-import { PdfConversation } from './features/conversation/PdfConversation';
+import { PdfConversation } from './features/conversation/components/PdfConversation';
 
 function App() {
   return (

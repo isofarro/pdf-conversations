@@ -1,9 +1,10 @@
 import Markdown from 'markdown-to-jsx';
-import type { Message } from '../../api/openai/types';
+import type { Message } from '../../../api/openai/types';
+import { ThreeDot } from 'react-loading-indicators';
 
 type ChatMessagesProps = {
   messages: Message[];
-  filename?: string;
+  isBusy: boolean;
 };
 
 const ChatMessage = ({ message }: { message: Message }) => {
@@ -25,16 +26,18 @@ const ChatMessage = ({ message }: { message: Message }) => {
   );
 };
 
-export const ChatMessages = ({ messages, filename }: ChatMessagesProps) => {
+export const ChatMessages = ({ messages, isBusy }: ChatMessagesProps) => {
   return (
     <>
-      {!!filename && (
-        <div className="chat-filename">{`Chatting about file: ${filename}`}</div>
-      )}
       <div className="chat-messages">
         {messages.map((msg, index) => (
           <ChatMessage key={index} message={msg} />
         ))}
+        {isBusy && (
+          <div className="chat-status">
+            <ThreeDot color="#32cd32" size="small" />
+          </div>
+        )}
       </div>
     </>
   );

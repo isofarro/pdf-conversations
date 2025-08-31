@@ -1,14 +1,17 @@
 import { useState } from 'react';
 
 type SelectFileProps = {
+  isBusy: boolean;
   onSelect: (file: File) => void;
 };
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-export const SelectFile = ({ onSelect }: SelectFileProps) => {
+export const SelectFile = ({ isBusy, onSelect }: SelectFileProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isUpdated, setIsUpdated] = useState(false);
+
+  const isDisabled = isBusy || !isUpdated;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -44,7 +47,7 @@ export const SelectFile = ({ onSelect }: SelectFileProps) => {
         Select a file to upload (max 10MB):{' '}
       </label>
       <input name="myFile" type="file" onChange={handleChange} />
-      <button type="submit" onClick={handleSelect} disabled={!isUpdated}>
+      <button type="submit" onClick={handleSelect} disabled={isDisabled}>
         Upload
       </button>
     </form>
