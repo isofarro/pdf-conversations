@@ -94,6 +94,15 @@ label.sr-only {
 }
 
 /* Upload form styles */
+.file-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1em;
+  font-size: 125%;
+  width: 80%;
+}
+
 .upload-form {
   display: flex;
   column-gap: 1em;

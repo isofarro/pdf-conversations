@@ -14,7 +14,10 @@ export const PdfConversation = () => {
       )}
       {error && <div className="chat-error">Error: {error}</div>}
       <ChatMessages messages={messages} isBusy={isBusy} />
-      <SelectFile onSelect={selectFile} isBusy={isBusy} />
+      <div className="file-controls">
+        <SelectFile files={files} onSelect={selectFile} isBusy={isBusy} />
+        <UploadFile onUpload={uploadFile} isBusy={isBusy} />
+      </div>
       <ChatInput onSend={sendMessage} isBusy={isBusy} />
     </>
   );
