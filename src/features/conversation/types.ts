@@ -1,5 +1,6 @@
 export enum StatusEnum {
   INIT = 'init',
+  LOADING = 'loading',
   UPLOADING = 'uploading',
   WAITING = 'waiting',
   IDLE = 'idle',

@@ -1,11 +1,20 @@
-import { SelectFile } from './SelectFile';
+import { UploadFile } from './UploadFile';
 import { ChatInput } from './ChatInput';
 import { ChatMessages } from './ChatMessages';
 import { useConversation } from '../hooks/useConversation';
+import { SelectFile } from './SelectFile';
 
 export const PdfConversation = () => {
-  const { isBusy, messages, currentFileName, error, selectFile, sendMessage } =
-    useConversation();
+  const {
+    isBusy,
+    messages,
+    files,
+    currentFileName,
+    error,
+    uploadFile,
+    selectFile,
+    sendMessage,
+  } = useConversation();
 
   return (
     <>

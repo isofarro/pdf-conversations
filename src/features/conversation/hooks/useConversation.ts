@@ -1,16 +1,21 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { OpenAiClient } from '../../../api/openai/OpenAiClient';
-import type { Message } from '../../../api/openai/types';
+import type { Message, UploadedFile } from '../../../api/openai/types';
 import { StatusEnum } from '../types';
 
 type UseConversationResponse = {
   status: StatusEnum;
   isBusy: boolean;
+
+  files: UploadedFile[];
   currentFileName?: string;
+
   messages: Message[];
+
   error: string | undefined;
 
-  selectFile: (file: File) => Promise<void>;
+  uploadFile: (file: File) => Promise<void>;
+  selectFile: (fileId: string) => Promise<void>;
   sendMessage: (message: string) => Promise<void>;
 };
 
@@ -20,10 +25,16 @@ export const useConversation = (): UseConversationResponse => {
   const [messages, setMessages] = useState<Message[]>(
     clientRef.current.history
   );
+  const [files, setFiles] = useState<UploadedFile[]>(clientRef.current.files);
 
-  const isBusy = [StatusEnum.UPLOADING, StatusEnum.WAITING].includes(status);
+  const isBusy = [
+    StatusEnum.LOADING,
+    StatusEnum.UPLOADING,
+    StatusEnum.WAITING,
+  ].includes(status);
 
-  const selectFile = async (file: File) => {
+  const uploadFile = async (file: File) => {
+    if (isBusy) return;
     try {
       setStatus(StatusEnum.UPLOADING);
       await clientRef.current.addFile(file);
@@ -35,7 +46,22 @@ export const useConversation = (): UseConversationResponse => {
     }
   };
 
+  const selectFile = async (fileId: string) => {
+    if (isBusy) return;
+    try {
+      setStatus(StatusEnum.WAITING);
+      await clientRef.current.selectFileById(fileId);
+      setMessages([...clientRef.current.history]);
+      setStatus(StatusEnum.IDLE);
+    } catch (error) {
+      console.error('Error selecting file:', error);
+      setStatus(StatusEnum.ERROR);
+      return;
+    }
+  };
+
   const sendMessage = async (message: string) => {
+    if (isBusy) return;
     try {
       setStatus(StatusEnum.WAITING);
 
@@ -53,13 +79,32 @@ export const useConversation = (): UseConversationResponse => {
     }
   };
 
+  useEffect(() => {
+    if (isBusy) return;
+    setStatus(StatusEnum.LOADING);
+    clientRef.current
+      .loadFiles()
+      .then(() => {
+        setFiles([...clientRef.current.files]);
+      })
+      .catch((error) => {
+        console.error('Error loading files:', error);
+      });
+    setStatus(StatusEnum.IDLE);
+  }, []);
+
   return {
     status,
     isBusy,
-    messages,
+
+    files,
     currentFileName: clientRef.current.currentFile?.filename,
+
+    messages,
+
     error: clientRef.current.lastError || undefined,
 
+    uploadFile,
     selectFile,
     sendMessage,
   };
