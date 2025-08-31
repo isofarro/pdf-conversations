@@ -1,55 +1,44 @@
 import { useState } from 'react';
+import type { UploadedFile } from '../../../api/openai/types';
 
 type SelectFileProps = {
+  files: UploadedFile[];
+  onSelect: (fileId: string) => void;
   isBusy: boolean;
-  onSelect: (file: File) => void;
 };
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const SelectFile = ({ files, onSelect, isBusy }: SelectFileProps) => {
+  const [selectedFileId, setSelectedFileId] = useState<string>('');
 
-export const SelectFile = ({ isBusy, onSelect }: SelectFileProps) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [isUpdated, setIsUpdated] = useState(false);
-
-  const isDisabled = isBusy || !isUpdated;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-      setIsUpdated(true);
-    }
-  };
-
-  const handleSelect = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!file) {
-      alert('No file selected');
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      alert('File size exceeds the 10MB limit.');
-      return;
-    }
-
-    onSelect(file);
-    setIsUpdated(false);
-  };
+  if (files.length === 0) {
+    console.log('No files available for selection.');
+    return <div></div>;
+  }
 
   return (
-    <form
-      action="http://localhost:8080/upload"
-      method="post"
-      encType="multipart/form-data"
-      className="upload-form"
-    >
-      <label htmlFor="fileInput" className="sr-only">
-        Select a file to upload (max 10MB):{' '}
+    <div className="select-file">
+      <label htmlFor="fileSelect" className="sr-only">
+        Select a file:
       </label>
-      <input name="myFile" type="file" onChange={handleChange} />
-      <button type="submit" onClick={handleSelect} disabled={isDisabled}>
-        Upload
-      </button>
-    </form>
+      <select
+        id="fileSelect"
+        value={selectedFileId}
+        onChange={(e) => {
+          const fileId = e.target.value;
+          setSelectedFileId(fileId);
+          onSelect(fileId);
+        }}
+        disabled={isBusy}
+      >
+        <option value="" disabled>
+          -- Choose a file --
+        </option>
+        {files.map((file) => (
+          <option key={file.id} value={file.id}>
+            {file.filename}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
