@@ -19,6 +19,7 @@ export class OpenAiClient {
     { role: 'system', content: 'You are a helpful assistant.' },
   ];
   currentFile: UploadedFile | null = null;
+  lastError: string | null = null;
 
   constructor() {
     // Initialization code here -- import.meta.env.VITE_OPENAI_API_KEY
@@ -48,19 +49,38 @@ export class OpenAiClient {
     return true;
   }
 
-  private async getResponse() {
-    const response = await this.client.responses.create({
-      ...LLM_DEFAULTS,
-      input: this.history.filter((m) => m.role !== 'local') as OpenAiMessage[],
-    });
-    const reply = response.output_text;
-    this.history.push({ role: 'assistant', content: reply });
-    return reply;
-  }
-
-  async sendMessage(message: string) {
+  addMessage(message: string) {
     console.log('Message added to OpenAiClient:', message);
     this.history.push({ role: 'user', content: message });
-    return this.getResponse();
+  }
+
+  private async getChatReply() {
+    this.lastError = null;
+    try {
+      const response = await this.client.responses.create({
+        ...LLM_DEFAULTS,
+        input: this.history.filter(
+          (m) => m.role !== 'local'
+        ) as OpenAiMessage[],
+      });
+      const reply = response.output_text;
+      return reply;
+    } catch (error: unknown) {
+      console.error('Error getting chat reply:', error);
+      if (typeof error === 'string') {
+        this.lastError = error;
+      } else if (error instanceof Error) {
+        this.lastError = (error as Error).message;
+      } else {
+        this.lastError = 'An unknown error occurred';
+      }
+      throw error;
+    }
+  }
+
+  async sendMessages(): Promise<Message[]> {
+    const reply = await this.getChatReply();
+    this.history.push({ role: 'assistant', content: reply });
+    return this.history;
   }
 }
