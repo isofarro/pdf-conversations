@@ -9,6 +9,7 @@ import type {
 const LLM_DEFAULTS = {
   model: 'gpt-4o-mini', // can handle PDF uploads
   // model: "gpt-5",
+
   // reasoning: { effort: "low" },
   // instructions: "Talk like a pirate.",
 };
@@ -19,6 +20,7 @@ export class OpenAiClient {
     { role: 'system', content: 'You are a helpful assistant.' },
   ];
   currentFile: UploadedFile | null = null;
+  lastUploadedFile: FileUploadContent | null = null;
   lastError: string | null = null;
 
   constructor() {
@@ -40,18 +42,25 @@ export class OpenAiClient {
       content: `File uploaded: ${file.name}`,
     });
     console.log('File added to OpenAiClient:', file, uploadedFile);
-    const fileContent: FileUploadContent = {
+    this.lastUploadedFile = {
       type: 'input_file',
       file_id: uploadedFile.id,
     };
     this.currentFile = uploadedFile;
-    this.history.push({ role: 'user', content: [fileContent] });
     return true;
   }
 
   addMessage(message: string) {
-    console.log('Message added to OpenAiClient:', message);
-    this.history.push({ role: 'user', content: message });
+    if (this.lastUploadedFile) {
+      // Attach file reference to the next user message
+      this.history.push({
+        role: 'user',
+        content: [this.lastUploadedFile, { type: 'input_text', text: message }],
+      });
+      this.lastUploadedFile = null; // Reset after using
+    } else {
+      this.history.push({ role: 'user', content: message });
+    }
   }
 
   private async getChatReply() {

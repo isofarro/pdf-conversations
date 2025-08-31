@@ -9,7 +9,7 @@ export type FileUploadContent =
       file_id: string;
     }
   | {
-      type: 'text';
+      type: 'input_text';
       text: string;
     };
 
