@@ -1,8 +1,3 @@
-export type OpenAiMessage = {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-};
-
 export type FileReferenceContent =
   | {
       type: 'input_file';
@@ -13,9 +8,16 @@ export type FileReferenceContent =
       text: string;
     };
 
-export type Message = {
-  role: 'user' | 'assistant' | 'system' | 'local';
+// A format that can handle file references.
+export type OpenAiMessage = {
+  role: 'user' | 'assistant' | 'system';
   content: string | FileReferenceContent[];
+};
+
+// Let's keep the local messages simple
+export type LocalMessage = {
+  role: 'user' | 'assistant' | 'system' | 'local';
+  content: string;
 };
 
 export type UploadedFile = {
