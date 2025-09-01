@@ -9,7 +9,7 @@ export const PdfConversation = () => {
     isBusy,
     messages,
     files,
-    currentFileName,
+    currentFile,
     error,
     uploadFile,
     selectFile,
@@ -18,13 +18,18 @@ export const PdfConversation = () => {
 
   return (
     <>
-      {currentFileName !== undefined && (
-        <div className="chat-filename">{`Chatting about file: ${currentFileName}`}</div>
+      {currentFile !== undefined && (
+        <div className="chat-filename">{`Chatting about file: ${currentFile.filename}`}</div>
       )}
       {error && <div className="chat-error">Error: {error}</div>}
       <ChatMessages messages={messages} isBusy={isBusy} />
       <div className="file-controls">
-        <SelectFile files={files} onSelect={selectFile} isBusy={isBusy} />
+        <SelectFile
+          files={files}
+          currentFile={currentFile}
+          onSelect={selectFile}
+          isBusy={isBusy}
+        />
         <UploadFile onUpload={uploadFile} isBusy={isBusy} />
       </div>
       <ChatInput onSend={sendMessage} isBusy={isBusy} />

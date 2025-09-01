@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { UploadedFile } from '../../../api/openai/types';
 
 type SelectFileProps = {
   files: UploadedFile[];
+  currentFile?: UploadedFile;
   onSelect: (fileId: string) => void;
   isBusy: boolean;
 };
 
-export const SelectFile = ({ files, onSelect, isBusy }: SelectFileProps) => {
+export const SelectFile = ({
+  files,
+  currentFile,
+  onSelect,
+  isBusy,
+}: SelectFileProps) => {
   const [selectedFileId, setSelectedFileId] = useState<string>('');
+
+  useEffect(() => {
+    setSelectedFileId(currentFile?.id || '');
+  }, [currentFile]);
 
   if (files.length === 0) {
     console.log('No files available for selection.');

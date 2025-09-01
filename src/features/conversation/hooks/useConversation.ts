@@ -8,7 +8,7 @@ type UseConversationResponse = {
   isBusy: boolean;
 
   files: UploadedFile[];
-  currentFileName?: string;
+  currentFile?: UploadedFile;
 
   messages: LocalMessage[];
 
@@ -26,8 +26,8 @@ export const useConversation = (): UseConversationResponse => {
     clientRef.current.getCurrentMessages()
   );
   const [files, setFiles] = useState<UploadedFile[]>(clientRef.current.files);
-  const [currentFileName, setCurrentFileName] = useState<string | undefined>(
-    clientRef.current.getCurrentFileName()
+  const [currentFile, setCurrentFile] = useState<UploadedFile | undefined>(
+    clientRef.current.getCurrentFile()
   );
 
   const isBusy = [
@@ -43,7 +43,7 @@ export const useConversation = (): UseConversationResponse => {
       await clientRef.current.addFile(file);
       setMessages([...clientRef.current.getCurrentMessages()]);
       setFiles([...clientRef.current.files]);
-      setCurrentFileName(clientRef.current.getCurrentFileName());
+      setCurrentFile(clientRef.current.getCurrentFile());
       setStatus(StatusEnum.IDLE);
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -103,7 +103,7 @@ export const useConversation = (): UseConversationResponse => {
     isBusy,
 
     files,
-    currentFileName,
+    currentFile,
 
     messages,
 

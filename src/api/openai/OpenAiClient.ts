@@ -81,9 +81,8 @@ export class OpenAiClient {
     return file;
   }
 
-  getCurrentFileName(): string | undefined {
-    const currentFile = this.files.find((f) => f.id === this.currentFileId);
-    return currentFile?.filename;
+  getCurrentFile(): UploadedFile | undefined {
+    return this.files.find((f) => f.id === this.currentFileId);
   }
 
   getCurrentFileConversation(): LocalMessage[] {
