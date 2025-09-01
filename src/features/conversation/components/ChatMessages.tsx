@@ -1,13 +1,18 @@
 import Markdown from 'markdown-to-jsx';
-import type { FileReferenceContent, Message } from '../../../api/openai/types';
+import type {
+  FileReferenceContent,
+  LocalMessage,
+} from '../../../api/openai/types';
 import { ThreeDot } from 'react-loading-indicators';
 
 type ChatMessagesProps = {
-  messages: Message[];
+  messages: LocalMessage[];
   isBusy: boolean;
 };
 
-const formatContentArrayAsString = (content: FileReferenceContent[]): string => {
+const formatContentArrayAsString = (
+  content: FileReferenceContent[]
+): string => {
   return content
     .map((item) => {
       if (item.type === 'input_file') {
@@ -19,17 +24,19 @@ const formatContentArrayAsString = (content: FileReferenceContent[]): string => 
       return '';
     })
     .join('\n');
-}
+};
 
-const formatMessageContentAsString = (content: string | FileReferenceContent[]): string => {
+const formatMessageContentAsString = (
+  content: string | FileReferenceContent[]
+): string => {
   if (typeof content === 'string') {
     return content as string;
   } else {
     return formatContentArrayAsString(content);
   }
-}
+};
 
-const ChatMessage = ({ message }: { message: Message }) => {
+const ChatMessage = ({ message }: { message: LocalMessage }) => {
   const text = formatMessageContentAsString(message.content);
 
   return (

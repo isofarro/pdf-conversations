@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { OpenAiClient } from '../../../api/openai/OpenAiClient';
-import type { Message, UploadedFile } from '../../../api/openai/types';
+import type { LocalMessage, UploadedFile } from '../../../api/openai/types';
 import { StatusEnum } from '../types';
 
 type UseConversationResponse = {
@@ -10,7 +10,7 @@ type UseConversationResponse = {
   files: UploadedFile[];
   currentFileName?: string;
 
-  messages: Message[];
+  messages: LocalMessage[];
 
   error: string | undefined;
 
@@ -22,8 +22,8 @@ type UseConversationResponse = {
 export const useConversation = (): UseConversationResponse => {
   const [status, setStatus] = useState<StatusEnum>(StatusEnum.INIT);
   const clientRef = useRef(new OpenAiClient());
-  const [messages, setMessages] = useState<Message[]>(
-    clientRef.current.history
+  const [messages, setMessages] = useState<LocalMessage[]>(
+    clientRef.current.getCurrentMessages()
   );
   const [files, setFiles] = useState<UploadedFile[]>(clientRef.current.files);
 
@@ -38,7 +38,7 @@ export const useConversation = (): UseConversationResponse => {
     try {
       setStatus(StatusEnum.UPLOADING);
       await clientRef.current.addFile(file);
-      setMessages([...clientRef.current.history]);
+      setMessages([...clientRef.current.getCurrentMessages()]);
       setStatus(StatusEnum.IDLE);
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -51,7 +51,7 @@ export const useConversation = (): UseConversationResponse => {
     try {
       setStatus(StatusEnum.WAITING);
       await clientRef.current.selectFileById(fileId);
-      setMessages([...clientRef.current.history]);
+      setMessages([...clientRef.current.getCurrentMessages()]);
       setStatus(StatusEnum.IDLE);
     } catch (error) {
       console.error('Error selecting file:', error);
@@ -66,7 +66,7 @@ export const useConversation = (): UseConversationResponse => {
       setStatus(StatusEnum.WAITING);
 
       clientRef.current.addMessage(message);
-      setMessages([...clientRef.current.history]);
+      setMessages([...clientRef.current.getCurrentMessages()]);
 
       const messages = await clientRef.current.sendMessages();
       setMessages([...messages]);
@@ -98,7 +98,7 @@ export const useConversation = (): UseConversationResponse => {
     isBusy,
 
     files,
-    currentFileName: clientRef.current.currentFile?.filename,
+    currentFileName: clientRef.current.getCurrentFileName(),
 
     messages,
 
