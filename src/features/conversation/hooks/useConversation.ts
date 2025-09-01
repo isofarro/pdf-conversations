@@ -26,6 +26,9 @@ export const useConversation = (): UseConversationResponse => {
     clientRef.current.getCurrentMessages()
   );
   const [files, setFiles] = useState<UploadedFile[]>(clientRef.current.files);
+  const [currentFileName, setCurrentFileName] = useState<string | undefined>(
+    clientRef.current.getCurrentFileName()
+  );
 
   const isBusy = [
     StatusEnum.LOADING,
@@ -39,6 +42,8 @@ export const useConversation = (): UseConversationResponse => {
       setStatus(StatusEnum.UPLOADING);
       await clientRef.current.addFile(file);
       setMessages([...clientRef.current.getCurrentMessages()]);
+      setFiles([...clientRef.current.files]);
+      setCurrentFileName(clientRef.current.getCurrentFileName());
       setStatus(StatusEnum.IDLE);
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -98,7 +103,7 @@ export const useConversation = (): UseConversationResponse => {
     isBusy,
 
     files,
-    currentFileName: clientRef.current.getCurrentFileName(),
+    currentFileName,
 
     messages,
 
